@@ -6,6 +6,7 @@ You can use this program to observe the feature space of trained checkpoint by s
 
 ## Requirements
 ```
+GPU
 numpy = 1.22.3
 umap-learn = 0.5.3
 ```
