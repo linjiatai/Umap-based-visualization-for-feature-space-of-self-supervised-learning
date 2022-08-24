@@ -1,4 +1,4 @@
-# Umap-based-visualization-for-self-supervised-learning
+# Umap-based-visualization-for-feature-space-of-self-supervised-learning
 
 ## Introduction
 You can use this program to observe the feature space of trained checkpoint by self-supervised lerannig.
@@ -19,4 +19,22 @@ pip install umap-learn
 ```
 - Preparation work
 
-You should place the checkpoint of self-supervised learning in **checkpoint** fold.
+(1) You should place the checkpoint of self-supervised learning in **checkpoint** fold.
+
+(2) You should place a dataset in **dataset** fold, like:
+
+dataset
+
+    |___KME
+        |___ADI
+        |___BACK
+        |___DEB
+        |___LYM
+        |___MUC
+        |___MUS
+        |___NORM
+        |___STR
+        |___TUM
+        
+
+
