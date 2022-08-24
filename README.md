@@ -1,1 +1,1 @@
-# tSNE-based-visualization-for-CNN-backbone
+# umap-based-visualization-for-CNN-backbone
