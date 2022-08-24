@@ -19,4 +19,4 @@ pip install umap-learn
 ```
 - Preparation work
 
-You should train a 
+You should place the checkpoint of self-supervised learning in **checkpoint** fold.
