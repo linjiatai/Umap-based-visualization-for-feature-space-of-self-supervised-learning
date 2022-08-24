@@ -1,1 +1,1 @@
-# umap-based-visualization-for-CNN-backbone
+# umap-based-visualization-for-self-supervised-learning
