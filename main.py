@@ -99,7 +99,7 @@ def main(args):
     train_label = np.argmax(train_label, axis=1)
 
 
-    fig = plt.figure(figsize=(40,30), dpi=600)
+    fig = plt.figure(figsize=(10,6), dpi=600)
     result = umap.UMAP(n_neighbors=10,
                         min_dist=0.5,
                         metric='correlation',
