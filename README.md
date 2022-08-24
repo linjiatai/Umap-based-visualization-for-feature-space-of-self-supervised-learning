@@ -21,7 +21,7 @@ pip install umap-learn
 
 (1) You should place the checkpoint of self-supervised learning in **checkpoint** fold.
 
-(2) You should place a dataset in **dataset** fold, like:
+(2) You should place a dataset in **dataset** fold, such as KME ([Baidu Netdisk](https://pan.baidu.com/s/1gLRDYK2lmgoLlZuzLcNIfw?pwd=wfzk ) with code **wfzk**):
 
 dataset
 
