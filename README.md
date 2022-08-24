@@ -1,5 +1,5 @@
 # Umap-based-visualization-for-feature-space-of-self-supervised-learning
-
+![outline](save/feature_visualization_for_SL.png)
 ## Introduction
 You can use this program to observe the feature space of trained checkpoint by self-supervised lerannig.
 
