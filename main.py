@@ -16,7 +16,19 @@ from sklearn.metrics import accuracy_score,f1_score
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 import umap
+from tool import csco_resnet
 
+def load_SL_pretrained_weight_simclr(model, load_dir):
+    # 加载SL-model
+    backbone = torch.load(load_dir)['state_dict']
+    model_dict = dict()
+    for key, value in model.state_dict().items():
+        if key == 'fc.weight' or key == 'fc.bias':
+            continue
+        model_dict[key] = backbone.pop('backbone.'+key)
+    model.load_state_dict(model_dict, strict=False)
+    model = model.cuda()
+    return model
 def load_SL_pretrained_weight(model, load_dir):
     # 加载SL-model
     backbone = torch.load(load_dir)['model']
@@ -38,6 +50,8 @@ def create_model(model_name, n_class):
     elif model_name == 'r50':
         model = resnet50(pretrained=True)
         model.fc = nn.Linear(512 * model.block.expansion, n_class)
+    elif model_name == 'csco_r50':
+        model = csco_resnet.resnet50(half_channel=True, in_channel=1)
     return model
 
 def feature_extraction(model,dataloader):
@@ -82,7 +96,8 @@ def main(args):
     loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.n_workers)
     args.n_item_train = len(dataset)
     model_names = ['r50']
-    n_features = [3840]
+    # n_features = [3840]
+    n_features = [2048]
     
 
     args.model_name = model_names[0]
@@ -92,7 +107,7 @@ def main(args):
     print('This model is', args.model_name)
     ##  Load CNN model
     model = create_model(model_name=args.model_name,n_class=args.n_class)
-    model = load_SL_pretrained_weight(model, args.SL_pretrained_weight)
+    model = load_SL_pretrained_weight_simclr(model, args.SL_pretrained_weight)
     model = model.cuda()
 
     train_feature, train_label = feature_extraction(model, loader)
@@ -102,7 +117,7 @@ def main(args):
     fig = plt.figure(figsize=(10,6), dpi=600)
     result = umap.UMAP(n_neighbors=10,
                         min_dist=0.5,
-                        metric='correlation',
+                        metric='manhattan',
                         random_state=16).fit_transform(train_feature)
 
     x_min, x_max = np.min(result, 0), np.max(result, 0)
@@ -113,7 +128,7 @@ def main(args):
                 color=plt.cm.Set1(train_label[j] / 10.),
                 fontdict={'weight': 'bold', 'size': 9})
     plt.title('Umap')
-    plt.savefig('save/feature_visualization_for_SL.png')
+    plt.savefig('save/feature_visualization_for_KME_simclr.png')
     test = 1
 
 if __name__ == '__main__':
@@ -121,11 +136,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Pyramidal Deep-Broad Learning')
     parser.add_argument('--device',     default='0',        type=str, help='index of GPU')
     parser.add_argument('--save_dir',   default='save/',    type=str, help='Save path of learned PDBL')
-    parser.add_argument('--datadir',   default='./dataset/KME/',     type=str, help='Path of training set')
+    parser.add_argument('--datadir',   default='dataset/KME/',     type=str, help='Path of training set')
     parser.add_argument('--batch_size', default=10,         type=int, help='Batch size of dataloaders')
     parser.add_argument('--n_class',    default=9,          type=int, help='Number of categories')
     parser.add_argument('--n_workers',  default=0,          type=int, help='Number of workers')
-    parser.add_argument('--SL_pretrained_weight', default='checkpoint/checkpoint_ep_11.pth', type = str, help=None)
+    parser.add_argument('--SL_pretrained_weight', default='checkpoint/simclr_epoch_500.pth', type = str, help=None)
     args = parser.parse_args()
 
     os.environ["CUDA_VISIBLE_DEVICES"] = args.device
